@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::time::{Instant, Duration};
 
 #[derive(PartialEq, Clone, Copy)]
 pub enum Screen {

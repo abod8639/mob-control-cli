@@ -111,7 +111,7 @@ impl App {
         }
 
         // Fire cannon
-        if now.duration_since(self.last_fire).as_millis() > (10000 / self.fire_rate) as u128 {
+        if now.duration_since(self.last_fire).as_millis() > (3000 / self.fire_rate) as u128 {
             for i in 0..self.mob_packet_size {
                 self.mobs.push(Mob {
                     x: self.cannon_x as f64 + (i as f64 * 0.5)
@@ -158,9 +158,9 @@ impl App {
                 }
             }
 
-            if !mob.is_enemy && mob.y <= 3.0 {
+            if !mob.is_enemy && mob.y <= 3.5 {
                 self.enemy_base_hp -= self.mob_damage;
-                self.bits += self.level;
+                self.bits += self.level * 5; // Fixed reward per hit
                 continue;
             }
 
@@ -197,6 +197,7 @@ impl App {
         self.mobs = final_mobs;
 
         if self.enemy_base_hp <= 0 {
+            self.bits += self.level * 1000;
             self.screen = Screen::LevelComplete;
         }
     }

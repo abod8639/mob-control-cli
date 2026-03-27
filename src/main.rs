@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    let tick_rate = Duration::from_millis(33);
+    let tick_rate = Duration::from_millis(66);
     let mut app = App::new();
     let res = run_app(&mut terminal, &mut app, tick_rate);
 
@@ -59,6 +59,9 @@ fn run_app<B: Backend>(
             .unwrap_or_else(|| Duration::from_secs(0));
         if event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
+                if key.code == KeyCode::Esc {
+                    return Ok(());
+                }
                 match app.screen {
                     Screen::Menu => {
                         match key.code {
