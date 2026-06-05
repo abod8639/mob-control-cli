@@ -17,6 +17,14 @@ pub struct Mob {
     pub speed: f64,
 }
 
+pub struct Obstacle {
+    pub x1: f64,
+    pub y1: f64,
+    pub x2: f64,
+    pub y2: f64,
+    pub is_slanted: bool,
+}
+
 pub struct Gate {
     pub x: u16,
     pub y: u16,
@@ -29,9 +37,12 @@ pub struct App {
     pub screen: Screen,
     pub bits: u32,
     pub level: u32,
+    pub cannon_pos: f64, // 0.0 to 1.0 along the track
     pub cannon_x: u16,
+    pub cannon_y: u16,
     pub mobs: Vec<Mob>,
     pub gates: Vec<Gate>,
+    pub obstacles: Vec<Obstacle>,
     pub enemy_base_hp: i32,
     pub enemy_base_max_hp: i32,
     pub fire_rate: u32,
