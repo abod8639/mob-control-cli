@@ -201,11 +201,7 @@ pub fn draw_gameplay(f: &mut Frame, area: Rect, app: &App) {
 
     for gate in &app.gates {
         let gate_rect = Rect::new(arena_rect.x + gate.x, gate.y, gate.width, 3);
-        let gate_text = if gate.is_add {
-            format!("+{}", gate.multiplier)
-        } else {
-            format!("x{}", gate.multiplier)
-        };
+        let gate_text = if gate.is_add { format!("+{}", gate.multiplier) } else { format!("x{}", gate.multiplier) };
         let gate_block = Block::default()
             .borders(Borders::ALL)
             .title(format!("[ {} ]", gate_text))
@@ -214,7 +210,41 @@ pub fn draw_gameplay(f: &mut Frame, area: Rect, app: &App) {
         f.render_widget(gate_block, gate_rect);
     }
 
+    // Draw Diverse Obstacles
+    for obs in &app.obstacles {
+        let y_range = if obs.y1 > obs.y2 { (obs.y2 as u16)..=(obs.y1 as u16) } else { (obs.y1 as u16)..=(obs.y2 as u16) };
+        
+        for y in y_range {
+            let x = if obs.is_slanted {
+                let total_y = (obs.y1 - obs.y2).abs();
+                if total_y > 0.1 {
+                    let ratio = (y as f64 - obs.y1.min(obs.y2)) / total_y;
+                    if obs.y1 > obs.y2 {
+                        obs.x2 + (obs.x1 - obs.x2) * ratio
+                    } else {
+                        obs.x1 + (obs.x2 - obs.x1) * ratio
+                    }
+                } else { obs.x1 }
+            } else {
+                obs.x1
+            };
+
+            if !obs.is_slanted {
+                let x_start = obs.x1.min(obs.x2) as u16;
+                let x_end = obs.x1.max(obs.x2) as u16;
+                for x_pos in x_start..=x_end {
+                    let obs_rect = Rect::new(arena_rect.x + x_pos, y, 1, 1);
+                    f.render_widget(Paragraph::new("▆").style(Style::default().fg(Color::Rgb(120, 120, 140))), obs_rect);
+                }
+            } else {
+                let obs_rect = Rect::new(arena_rect.x + x as u16, y, 2, 1);
+                f.render_widget(Paragraph::new("▒").style(Style::default().fg(Color::Rgb(100, 100, 120))), obs_rect);
+            }
+        }
+    }
+
     for mob in &app.mobs {
+
         let x = (arena_rect.x as f64 + mob.x).clamp(
             arena_rect.x as f64 + 1.0,
             arena_rect.x as f64 + arena_rect.width as f64 - 2.0,
@@ -234,12 +264,7 @@ pub fn draw_gameplay(f: &mut Frame, area: Rect, app: &App) {
         }
     }
 
-    let cannon_rect = Rect::new(
-        arena_rect.x + app.cannon_x,
-        arena_rect.y + arena_rect.height - 2,
-        3,
-        1,
-    );
+    let cannon_rect = Rect::new(arena_rect.x + app.cannon_x, app.cannon_y, 4, 1);
     f.render_widget(
         Paragraph::new("︻╦╤─").style(Style::default().fg(Color::Rgb(57, 255, 20))),
         cannon_rect,
