@@ -2,6 +2,16 @@
 
 A terminal-based tactical management simulation built with Rust and the Ratatui framework. This application provides a high-performance terminal user interface (TUI) for managing units in a cyberpunk-themed environment.
 
+> **Note**: This project was made for fun only.
+
+
+
+## demo
+
+![demo](assets/image.png)
+![demo](assets/image1.png)
+![demo](assets/image2.png)
+
 ## Prerequisites
 
 To build and run this project, ensure the following tools are installed on your system:
