@@ -72,8 +72,8 @@ fn run_app<B: Backend>(
                     }
                     Screen::Gameplay => {
                         match key.code {
-                            KeyCode::Left => { if app.cannon_x > 5 { app.cannon_x -= 1; } }
-                            KeyCode::Right => { if app.cannon_x < 35 { app.cannon_x += 1; } }
+                            KeyCode::Left => app.move_cannon(-0.05),
+                            KeyCode::Right => app.move_cannon(0.05),
                             KeyCode::Char('q') => app.screen = Screen::Menu,
                             _ => {}
                         }
